@@ -31,7 +31,7 @@ public class DatabaseAccess {
      * Return a singleton instance of DatabaseAccess.
      *
      * @param context the Context
-     * @return the instance of DabaseAccess
+     * @return the instance of DatabaseAccess
      */
     public static DatabaseAccess getInstance(Context context) {
         if (instance == null) {
@@ -61,12 +61,12 @@ public class DatabaseAccess {
      *
      * @return a List of quotes
      */
-    public List<String> getQuotes() {
+    public List<String> getBreak() {
         List<String> list = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM quotes", null);
+        Cursor cursor = database.rawQuery("SELECT * FROM breaks WHERE __id IN (SELECT __id FROM breaks ORDER BY RANDOM() LIMIT 1)", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            list.add(cursor.getString(0));
+            list.add(cursor.getString(1));
             cursor.moveToNext();
         }
         cursor.close();

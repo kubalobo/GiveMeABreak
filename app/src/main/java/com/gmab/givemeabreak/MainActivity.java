@@ -2,13 +2,11 @@ package com.gmab.givemeabreak;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.Window;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +14,15 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkAndRequestPermissions();
+        if(checkAndRequestPermissions())
+            databaseConnect();
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
      * 2. make new if statement made like storage one
      * @return true if permissions are granted
      */
-    private  boolean checkAndRequestPermissions() {
+    private boolean checkAndRequestPermissions() {
 
         int storage = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         List<String> listPermissionsNeeded = new ArrayList<>();
@@ -75,9 +75,18 @@ public class MainActivity extends Activity {
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        //DataBase init
-
+        databaseConnect();
     }
 
+    private void databaseConnect(){
+        DatabaseAccess.getInstance(this).open();
+    }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+        DatabaseAccess.getInstance(this).close();
+
+    }
 }

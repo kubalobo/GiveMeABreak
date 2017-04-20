@@ -1,10 +1,15 @@
 package com.gmab.givemeabreak;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import java.util.List;
 
 /**
  * Created by Kuba on 09.04.2017.
@@ -21,6 +26,22 @@ public class StartFragment extends Fragment{
 
         View v = inflater.inflate(R.layout.start_screen, container, false);
 
+        ImageButton gmabButton = (ImageButton) v.findViewById(R.id.gmabButton);
+        gmabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Context context = getActivity();
+
+                List<String> quotes = DatabaseAccess.getInstance(context).getBreak();
+
+                String text = quotes.get(0);
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast.makeText(context, text, duration).show();
+            }
+        });
+
 //        ImageButton newRouteButton = (ImageButton) v.findViewById(R.id.NewRouteButton);
 
 //        newRouteButton.setOnClickListener(new View.OnClickListener() {
@@ -36,6 +57,7 @@ public class StartFragment extends Fragment{
 
         return v;
     }
+
 
     @Override public void onDetach() {
         super.onDetach();
